@@ -1,5 +1,8 @@
-/Documentation/html/
-/Documentation/man1/
-/t/test-results
-/t/trash directory*
-/__pycache__/
+.firebase/chatflow-admin/functions/node_modules/@next/swc-linux-x64-gnu/next-swc.linux-x64-gnu.node
+project_download.tar.gz
+.firebase/chatflow-admin/functions/node_modules/@next/swc-linux-x64-musl/next-swc.linux-x64-musl.node
+node_modules/
+.next/
+.env.local
+.firebase/
+.blackboxrules
