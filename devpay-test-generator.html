@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>DevPay - Gerador de Testes</title>
+    <style>
+        body { background: #121212; color: #00ff00; font-family: 'Courier New', monospace; padding: 20px; }
+        .terminal { border: 1px solid #333; padding: 20px; background: #000; box-shadow: 0 0 15px rgba(0,255,0,0.2); }
+        button { background: #00ff00; color: #000; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #333; padding: 8px; text-align: left; }
+        .header { color: #fff; border-bottom: 1px solid #00ff00; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        <div class="header">> PAY_SYSTEM_TEST_TERMINAL_v1.0</div>
+        <p>Gere dados fakes para validação de checkout (Algoritmo de Luhn ativo).</p>
+        <button type="button" onclick="generateData()">GERAR NOVOS DADOS</button>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Número do Cartão</th>
+                    <th>CVV</th>
+                    <th>Validade</th>
+                    <th>Banco/País</th>
+                </tr>
+            </thead>
+            <tbody id="result-body">
+                </tbody>
+        </table>
+    </div>
+
+    <script>
+        function luhnCheck(num) {
+            let sum = 0;
+            const parity = num.length % 2;
+            for (let i = 0; i < num.length; i++) {
+                let intVal = parseInt(num.charAt(i), 10);
+                if (i % 2 === parity) {
+                    intVal *= 2;
+                    if (intVal > 9) intVal = 1 + (intVal % 10);
+                }
+                sum += intVal;
+            }
+            return (sum % 10 === 0);
+        }
+
+        function generateCard(prefix) {
+            let card = prefix;
+            while (card.length < 15) card += Math.floor(Math.random() * 10);
+            for (let i = 0; i <= 9; i++) {
+                if (luhnCheck(card + i)) return card + i;
+            }
+            return card + "0";
+        }
+
+        function generateData() {
+            const names = ["JOAO R SILVA", "MARIA S OLIVEIRA", "CARLOS E SOUZA", "ANA P COSTA"];
+            const banks = ["Banco do Brasil (BR)", "Santander (ES)", "Chase (US)", "Itau (BR)"];
+            const body = document.getElementById('result-body');
+            body.innerHTML = '';
+
+            for(let i=0; i<5; i++) {
+                const row = document.createElement('tr');
+                const values = [
+                    names[Math.floor(Math.random() * names.length)],
+                    generateCard("4"),
+                    `${Math.floor(Math.random() * 899) + 100}`,
+                    `12/${2026 + Math.floor(Math.random() * 5)}`,
+                    banks[Math.floor(Math.random() * banks.length)]
+                ];
+
+                for (const value of values) {
+                    const td = document.createElement('td');
+                    td.textContent = value;
+                    row.appendChild(td);
+                }
+
+                body.appendChild(row);
+            }
+        }
+
+        generateData();
+    </script>
+</body>
+</html>
